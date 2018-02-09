@@ -1,0 +1,33 @@
+#
+# Spring Properties
+#
+spring:
+    #
+    # Application Properties
+    #
+    application:
+        name: auth-service
+    #
+    # Spring Cloud Properties
+    #
+    cloud:
+        #
+        # Configuration Properties
+        #
+        config:
+            #
+            # Config Server Location
+            #
+            uri: ${CONFIG_SERVICE_URL:https://localhost:8888/config}
+            username: ${CONFIG_SERVICE_USERNAME:user}
+            password: ${CONFIG_SERVICE_PASSWORD:user}
+
+#
+# Logging Properties
+#
+logging:
+    level:
+        org.springframework.cloud.config.client: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_CONFIG_CLIENT:DEBUG}
+        sample.common: DEBUG
+        sample.authservice: DEBUG
+

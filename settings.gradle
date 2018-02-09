@@ -1,0 +1,5 @@
+rootProject.name = 'cloud-native-samples'
+
+include "common"
+include "config-service"
+include "auth-service"
