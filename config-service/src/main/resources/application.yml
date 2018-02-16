@@ -1,18 +1,11 @@
 #
-# Security Properties
-#
-security:
-    requireSsl: true
-    basic:
-        enabled: true
-
-#
 # Server Properties
 #
 server:
     port: ${AUTH_SERVICE_SERVER_PORT:8888}
     contextPath: ${AUTH_SERVICE_CONTEXT_PATH:/config}
     ssl:
+        enabled: true
         keyStore: ${user.home}/.keystore
         keyStorePassword: ${CONFIG_SERVICE_SERVER_SSL_KEYSTORE_PASSWORD:changeit}
         protocol: ${SSL_PROTOCOL:TLSv1.2}

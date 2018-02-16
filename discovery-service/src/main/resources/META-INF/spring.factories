@@ -1,0 +1,4 @@
+# Bootstrap components
+org.springframework.cloud.bootstrap.BootstrapConfiguration=\
+sample.common.configuration.CustomSslConfiguration,\
+sample.common.configuration.CustomConfigServiceBootstrapConfiguration

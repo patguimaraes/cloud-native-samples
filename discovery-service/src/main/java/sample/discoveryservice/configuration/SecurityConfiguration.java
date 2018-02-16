@@ -1,4 +1,4 @@
-package sample.authservice.configuration;
+package sample.discoveryservice.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,27 +38,13 @@ public class SecurityConfiguration {
             // @formatter:off
             http
                 .authorizeRequests()
-                    .antMatchers("/", "/home")
-                        .permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest()
+                        .hasRole("ADMIN")
                     .and()
-                .formLogin()
-                    .loginPage("/login")
-                        .permitAll()
-                    .defaultSuccessUrl("/hello")
+                .httpBasic()
                     .and()
-                .logout()
-                     .permitAll()
-                     .logoutSuccessUrl("/home")
-                    .and()
-                .headers()    // add headers
-                   .httpStrictTransportSecurity() // add the HTTP Strict Transport Security (HSTS) header
-                       .maxAgeInSeconds(31536000)
-                       .includeSubDomains(true)
-                       .and()  // return the HeadersConfigurer
-                   .frameOptions()  // add the HTTP X-Frame-Options header
-                       .deny()
-                   .cacheControl(); // add cache control headers
+                .csrf()
+                    .disable();
             // @formatter:on
         }
     }

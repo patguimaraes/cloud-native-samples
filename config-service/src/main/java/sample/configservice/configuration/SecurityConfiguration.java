@@ -20,7 +20,7 @@ public class SecurityConfiguration {
 
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-    public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    public static class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         /** The logger. */
         private static final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
@@ -37,25 +37,20 @@ public class SecurityConfiguration {
             // @formatter:off
             http
                 .authorizeRequests()
-                    .anyRequest().authenticated()
+                    .anyRequest()
+                        .hasRole("ADMIN")
                     .and()
                 .httpBasic()
                     .and()
-                .headers()    // add headers
-                   .httpStrictTransportSecurity() // add the HTTP Strict Transport Security (HSTS) header
-                       .maxAgeInSeconds(31536000)
-                       .includeSubDomains(true)
-                       .and()  // return the HeadersConfigurer
-                   .frameOptions()  // add the HTTP X-Frame-Options header
-                       .deny()
-                   .cacheControl(); // add cache control headers
+                .csrf()
+                    .disable();
             // @formatter:on
         }
     }
 
     @Configuration
     @Order(ManagementServerProperties.ACCESS_OVERRIDE_ORDER)
-    public static class BasicAuthenticationWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+    public static class ManagementSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         protected void configure(HttpSecurity http) throws Exception {
             // @formatter:off

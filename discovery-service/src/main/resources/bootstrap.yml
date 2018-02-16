@@ -1,0 +1,34 @@
+#
+# Spring Properties
+#
+spring:
+    #
+    # Application Properties
+    #
+    application:
+        name: discovery-service
+    #
+    # Spring Cloud Properties
+    #
+    cloud:
+        #
+        # Configuration Properties
+        #
+        config:
+            #
+            # Config Server Location
+            #
+            uri: ${CONFIG_SERVICE_URL:https://localhost:8888/config}
+            username: ${CONFIG_SERVICE_USERNAME:admin}
+            password: ${CONFIG_SERVICE_PASSWORD:admin}
+
+#
+# Logging Properties
+#
+logging:
+    level:
+        org.springframework.cloud.config.client: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_CONFIG_CLIENT:DEBUG}
+        org.springframework.cloud.netflix: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_NETFLIX:DEBUG}
+        sample.common: ${LOGGING_LEVEL_SAMPLE_COMMON:DEBUG}
+        sample.discoveryservice: ${LOGGING_LEVEL_SAMPLE_DISCOVERY_SERVICE:DEBUG}
+
