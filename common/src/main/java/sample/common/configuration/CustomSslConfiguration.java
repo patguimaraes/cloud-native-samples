@@ -1,4 +1,4 @@
-package sample.authservice.configuration;
+package sample.common.configuration;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -40,23 +40,19 @@ import org.springframework.util.Base64Utils;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class CustomConfigServiceBootstrapConfiguration {
+public class CustomSslConfiguration {
 
     /** The logger. */
-    private static final Logger log = LoggerFactory.getLogger(CustomConfigServiceBootstrapConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomSslConfiguration.class);
 
     public static final String DEFAULT_SSL_PROTOCOL = "TLSv1.2";
     
-    @Bean
-    public ConfigServicePropertySourceLocator configServicePropertySourceLocator(ConfigClientProperties properties)
-            throws KeyManagementException, NoSuchAlgorithmException {
-        ConfigServicePropertySourceLocator configServicePropertySourceLocator =  new ConfigServicePropertySourceLocator(properties);
-        configServicePropertySourceLocator.setRestTemplate(getSecureRestTemplate(properties));
-        log.debug("configured instance of ConfigServicePropertySourceLocator to use custom RestTemplate");
-        return configServicePropertySourceLocator;
+    public CustomSslConfiguration() {
+        log.debug("Creating instance of class CustomSslConfiguration");
     }
 
-    private RestTemplate getSecureRestTemplate(ConfigClientProperties client)
+    @Bean
+    public RestTemplate restTemplate(ConfigClientProperties client)
             throws KeyManagementException, NoSuchAlgorithmException {
         /*
          * Create a hostname verifier that ignores SSL hostname errors

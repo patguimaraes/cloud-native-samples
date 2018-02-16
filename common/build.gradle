@@ -31,6 +31,8 @@ dependencyManagement {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-security'
     
+    compile 'org.springframework.cloud:spring-cloud-config-client'
+
     runtime 'org.springframework.boot:spring-boot-devtools'
 }
 

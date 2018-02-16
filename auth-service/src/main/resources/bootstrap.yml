@@ -19,8 +19,8 @@ spring:
             # Config Server Location
             #
             uri: ${CONFIG_SERVICE_URL:https://localhost:8888/config}
-            username: ${CONFIG_SERVICE_USERNAME:user}
-            password: ${CONFIG_SERVICE_PASSWORD:user}
+            username: ${CONFIG_SERVICE_USERNAME:admin}
+            password: ${CONFIG_SERVICE_PASSWORD:admin}
 
 #
 # Logging Properties
