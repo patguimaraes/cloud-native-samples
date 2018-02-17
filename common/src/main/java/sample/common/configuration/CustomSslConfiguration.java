@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -21,15 +20,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.Ssl;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.config.client.ConfigClientProperties;
-import org.springframework.cloud.config.client.ConfigServicePropertySourceLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -46,7 +39,7 @@ public class CustomSslConfiguration {
     private static final Logger log = LoggerFactory.getLogger(CustomSslConfiguration.class);
 
     public static final String DEFAULT_SSL_PROTOCOL = "TLSv1.2";
-    
+
     public CustomSslConfiguration() {
         log.debug("Creating instance of class CustomSslConfiguration");
     }
@@ -107,10 +100,11 @@ public class CustomSslConfiguration {
         log.debug("obtained sslSocketFactory initialized with custom TrustManager");
 
         /*
-         * Create a ClientHttpRequestFactory that ignores SSL hostname errors and certificate errors
+         * Create a ClientHttpRequestFactory that ignores SSL hostname errors
+         * and certificate errors
          */
-        SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
-                sslSocketFactory, hostnameVerifier);
+        SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(sslSocketFactory,
+                hostnameVerifier);
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         httpClientBuilder.setSSLSocketFactory(sslConnectionSocketFactory);
         HttpClient httpClient = httpClientBuilder.build();
@@ -118,7 +112,8 @@ public class CustomSslConfiguration {
         log.debug("created custom ClientHttpRequestFactory that ignores SSL hostname and certificate errors");
 
         /*
-         * Create a custom RestTemplate that ignores SSL hostname and certificate errors
+         * Create a custom RestTemplate that ignores SSL hostname and
+         * certificate errors
          */
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
         log.debug("created custom RestTemplate that ignores SSL hostname and certificate errors");
@@ -133,16 +128,15 @@ public class CustomSslConfiguration {
         Map<String, String> headers = new HashMap<>(client.getHeaders());
 
         if ((username == null) || (password == null)) {
-            throw new IllegalStateException(
-                    "You must set both the 'username' and the 'password'");
+            throw new IllegalStateException("You must set both the 'username' and the 'password'");
         }
 
         byte[] token = Base64Utils.encode((username + ":" + password).getBytes());
         headers.put("Authorization", "Basic " + new String(token));
-        restTemplate.setInterceptors(Arrays.<ClientHttpRequestInterceptor> asList(
-                    new GenericRequestHeaderInterceptor(headers)));
+        restTemplate.setInterceptors(
+                Arrays.<ClientHttpRequestInterceptor>asList(new GenericRequestHeaderInterceptor(headers)));
         log.debug("configured custom RestTemplate to use Basic Authentication");
- 
+
         return restTemplate;
     }
 
@@ -155,8 +149,8 @@ public class CustomSslConfiguration {
         }
 
         @Override
-        public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-                ClientHttpRequestExecution execution) throws IOException {
+        public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+                throws IOException {
             for (Entry<String, String> header : headers.entrySet()) {
                 request.getHeaders().add(header.getKey(), header.getValue());
             }

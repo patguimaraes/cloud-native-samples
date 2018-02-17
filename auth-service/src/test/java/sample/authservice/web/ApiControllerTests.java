@@ -2,9 +2,7 @@ package sample.authservice.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Matchers.contains;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,11 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -48,13 +44,13 @@ public class ApiControllerTests {
 
     /** The logger. */
     private static final Logger log = LoggerFactory.getLogger(ApiControllerTests.class);
-    
+
     private static final String AUTHENTICATION_ERROR = "Full authentication is required to access this resource";
 
     private static final String BAD_CREDENTIALS_ERROR = "Bad credentials";
 
     private static final String CHECK_TOKEN_PATH = "/oauth/check_token";
-    
+
     private static final String KEY = "secret";
 
     private static final String MISSING_GRANT_TYPE_ERROR = "Missing grant type";
