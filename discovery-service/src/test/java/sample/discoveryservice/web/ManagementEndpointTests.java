@@ -1,4 +1,4 @@
-package sample.authservice.web;
+package sample.discoveryservice.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -23,21 +23,21 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import sample.authservice.properties.TestProperties;
+import sample.discoveryservice.properties.TestProperties;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class BasicAuthenticationTests {
+public class ManagementEndpointTests {
 
     /** The logger. */
-    private static final Logger log = LoggerFactory.getLogger(BasicAuthenticationTests.class);
+    private static final Logger log = LoggerFactory.getLogger(ManagementEndpointTests.class);
 
     private static final String ACCESS_DENIED_ERROR_MESSAGE = "Access is denied";
 
     private static final String ADMIN_HEALTH_ENDPOINT = "/admin/health";
 
-    private static final String ADMIN_HEALTH_ENDPOINT_CONTENT_SUBSTRING = "{\"status\":\"UP\"}";
+    private static final String ADMIN_HEALTH_ENDPOINT_CONTENT_SUBSTRING = "\"status\":\"UP\"";
 
     private static final String ADMIN_BEANS_ENDPOINT = "/admin/beans";
 
@@ -78,20 +78,20 @@ public class BasicAuthenticationTests {
     }
 
     @Test
-    public void testHealthEndpointWithBasicAuthenticationAndNoCredentials() throws Exception {
+    public void testHealthEndpointWithNoCredentials() throws Exception {
         // @formatter:off
         String url = ADMIN_HEALTH_ENDPOINT;
         log.debug("url = " + url);
         this.mvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(unauthenticated())
-                .andExpect(content().json(ADMIN_HEALTH_ENDPOINT_CONTENT_SUBSTRING, true))
+                .andExpect(content().string(containsString(ADMIN_HEALTH_ENDPOINT_CONTENT_SUBSTRING)))
                 .andDo(print());
         // @formatter:on
     }
 
     @Test
-    public void testAdminEndpointWithBasicAuthenticationAndNoCredentials() throws Exception {
+    public void testAdminEndpointWithNoCredentials() throws Exception {
         // @formatter:off
         String url = ADMIN_BEANS_ENDPOINT;
         log.debug("url = " + url);
@@ -103,7 +103,7 @@ public class BasicAuthenticationTests {
     }
 
     @Test
-    public void testAdminEndpointWithBasicAuthenticationAndInvalidCredentials() throws Exception {
+    public void testAdminEndpointWithInvalidCredentials() throws Exception {
         // @formatter:off
         String url = ADMIN_BEANS_ENDPOINT;
         log.debug("url = " + url);
@@ -116,7 +116,7 @@ public class BasicAuthenticationTests {
     }
 
     @Test
-    public void testAdminEndpointWithBasicAuthenticationAndNonAdminCredentials() throws Exception {
+    public void testAdminEndpointWithNonAdminCredentials() throws Exception {
         // @formatter:off
         String url = ADMIN_BEANS_ENDPOINT;
         log.debug("url = " + url);
@@ -129,7 +129,7 @@ public class BasicAuthenticationTests {
     }
 
     @Test
-    public void testAdminEndpointWithBasicAuthenticationAndAdminCredentials() throws Exception {
+    public void testAdminEndpointWithAdminCredentials() throws Exception {
         // @formatter:off
         String url = ADMIN_BEANS_ENDPOINT;
         log.debug("url = " + url);
