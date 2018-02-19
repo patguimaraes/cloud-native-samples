@@ -1,0 +1,33 @@
+#
+# Spring Properties
+#
+spring:
+    #
+    # Application Properties
+    #
+    application:
+        name: user-service
+    #
+    # Spring Cloud Properties
+    #
+    cloud:
+        #
+        # Configuration Properties
+        #
+        config:
+            #
+            # Config Server Location
+            #
+            uri: ${CONFIG_SERVICE_URL:https://localhost:8888/config}
+            username: ${CONFIG_SERVICE_USERNAME:admin}
+            password: ${CONFIG_SERVICE_PASSWORD:admin}
+
+#
+# Logging Properties
+#
+logging:
+    level:
+        org.springframework.cloud.config.client: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_CLOUD_CONFIG_CLIENT:DEBUG}
+        sample.common: DEBUG
+        sample.userservice: DEBUG
+
