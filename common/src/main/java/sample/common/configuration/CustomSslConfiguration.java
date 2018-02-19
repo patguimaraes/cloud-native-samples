@@ -1,12 +1,7 @@
 package sample.common.configuration;
 
-import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -20,18 +15,14 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.cloud.config.client.ConfigClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.util.Base64Utils;
-import org.springframework.web.client.RestTemplate;
 
+/**
+ * This class creates an instance of ClientHttpRequestFactory that ignores SSL certificate errors.
+ */
 @Configuration
 public class CustomSslConfiguration {
 
@@ -45,7 +36,7 @@ public class CustomSslConfiguration {
     }
 
     @Bean
-    public RestTemplate restTemplate(ConfigClientProperties client)
+    public ClientHttpRequestFactory clientHttpRequestFactory()
             throws KeyManagementException, NoSuchAlgorithmException {
         /*
          * Create a hostname verifier that ignores SSL hostname errors
@@ -110,53 +101,8 @@ public class CustomSslConfiguration {
         HttpClient httpClient = httpClientBuilder.build();
         ClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
         log.debug("created custom ClientHttpRequestFactory that ignores SSL hostname and certificate errors");
-
-        /*
-         * Create a custom RestTemplate that ignores SSL hostname and
-         * certificate errors
-         */
-        RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
-        log.debug("created custom RestTemplate that ignores SSL hostname and certificate errors");
-
-        /*
-         * Configure the custom RestTemplate to use Basic Authentication
-         */
-        String username = client.getUsername();
-        log.debug("username = " + username);
-        String password = client.getPassword();
-        log.debug("password = PROTECTED");
-        Map<String, String> headers = new HashMap<>(client.getHeaders());
-
-        if ((username == null) || (password == null)) {
-            throw new IllegalStateException("You must set both the 'username' and the 'password'");
-        }
-
-        byte[] token = Base64Utils.encode((username + ":" + password).getBytes());
-        headers.put("Authorization", "Basic " + new String(token));
-        restTemplate.setInterceptors(
-                Arrays.<ClientHttpRequestInterceptor>asList(new GenericRequestHeaderInterceptor(headers)));
-        log.debug("configured custom RestTemplate to use Basic Authentication");
-
-        return restTemplate;
-    }
-
-    public static class GenericRequestHeaderInterceptor implements ClientHttpRequestInterceptor {
-
-        private final Map<String, String> headers;
-
-        public GenericRequestHeaderInterceptor(Map<String, String> headers) {
-            this.headers = headers;
-        }
-
-        @Override
-        public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
-                throws IOException {
-            for (Entry<String, String> header : headers.entrySet()) {
-                request.getHeaders().add(header.getKey(), header.getValue());
-            }
-            return execution.execute(request, body);
-        }
-
+        
+        return clientHttpRequestFactory;
     }
 
 }

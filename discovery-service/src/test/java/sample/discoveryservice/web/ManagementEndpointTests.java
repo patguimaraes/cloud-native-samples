@@ -6,6 +6,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,6 +43,8 @@ public class ManagementEndpointTests {
     private static final String ADMIN_BEANS_ENDPOINT = "/admin/beans";
 
     private static final String ADMIN_BEANS_ENDPOINT_CONTENT_SUBSTRING = "\"beans\":[{";
+
+    private static final String ADMIN_REFRESH_ENDPOINT = "/admin/refresh";
 
     private static final String BAD_CREDENTIALS_ERROR_MESSAGE = "Bad credentials";
 
@@ -137,6 +140,30 @@ public class ManagementEndpointTests {
                 .andExpect(authenticated())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(ADMIN_BEANS_ENDPOINT_CONTENT_SUBSTRING)))
+                .andDo(print());
+        // @formatter:on
+    }
+
+    @Test
+    public void testGetRefreshEndpointWithBasicAuthenticationAndAdminCredentials() throws Exception {
+        // @formatter:off
+        String url = ADMIN_REFRESH_ENDPOINT;
+        log.debug("url = " + url);
+        this.mvc.perform(get(url).with(httpBasic(this.adminUsername, this.adminPassword)))
+                .andExpect(authenticated())
+                .andExpect(status().isMethodNotAllowed())
+                .andDo(print());
+        // @formatter:on
+    }
+
+    @Test
+    public void testPostRefreshEndpointWithBasicAuthenticationAndAdminCredentials() throws Exception {
+        // @formatter:off
+        String url = ADMIN_REFRESH_ENDPOINT;
+        log.debug("url = " + url);
+        this.mvc.perform(post(url).with(httpBasic(this.adminUsername, this.adminPassword)))
+                .andExpect(authenticated())
+                .andExpect(status().isOk())
                 .andDo(print());
         // @formatter:on
     }
